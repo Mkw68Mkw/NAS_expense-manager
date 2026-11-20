@@ -1,0 +1,32 @@
+name: expense-manager
+
+services:
+  backend:
+    build: ./backend
+    image: expense-manager-backend:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_PATH: /app/data/expenses.db
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-20}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      TZ: ${TZ:-Europe/Zurich}
+    volumes:
+      - expense-data:/app/data
+    # No published port: the backend is only reachable through the frontend's Nginx proxy.
+    expose:
+      - "5000"
+
+  frontend:
+    build: ./frontend
+    image: expense-manager-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${APP_BIND_ADDRESS:-0.0.0.0}:${APP_PORT:-3000}:80"
+
+volumes:
+  expense-data:

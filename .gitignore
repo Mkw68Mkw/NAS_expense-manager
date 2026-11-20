@@ -1,0 +1,28 @@
+# Environment
+.env
+
+# Node
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Local data
+data/
+*.db
+*.db-shm
+*.db-wal
+backups/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
